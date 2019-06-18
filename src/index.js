@@ -9,7 +9,12 @@ let links =[{
     id: 'link-0',
     url: 'www.howtographql',
     description: 'Fullstack tutorial for GraphQL'
-}];
+}, {
+    id: 'link-1',
+    url: 'www.google.com',
+    description: 'Search Engine'
+}
+];
 
 let idCount = links.length;
 
@@ -39,11 +44,17 @@ const resolvers = {
 
             return links[ind];
         },
-        deleteLink: (parent,args) => {
-            //var ind = _.findIndex(links, {id: args.id});
-            //links = (links, {id: args.id});
-            return _.remove(links, {id: args.id});
-        }
+        // deleteLink: (parent,args) => {
+        //     //var ind = _.findIndex(links, {id: args.id});
+        //     //links = (links, {id: args.id});
+        //     _.remove(links, {id: args.id});
+
+        //     if(links.length == 0){
+        //         return null;
+        //     }else{
+        //         return links;
+        //     }
+        // }
        
     }
 }
