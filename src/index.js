@@ -18,6 +18,7 @@ const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
         feed: () => links,
+        link: (parent,args) => _.find(links, {id: args.id})
     },
 
     Mutation:{
@@ -35,8 +36,13 @@ const resolvers = {
 
             links[ind].url = args.url !== undefined ? args.url : links[ind].url;
             links[ind].description = args.description !== undefined ? args.description : links[ind].description;
-            
+
             return links[ind];
+        },
+        deleteLink: (parent,args) => {
+            //var ind = _.findIndex(links, {id: args.id});
+            //links = (links, {id: args.id});
+            return _.remove(links, {id: args.id});
         }
        
     }
