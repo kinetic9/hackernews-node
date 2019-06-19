@@ -9,7 +9,8 @@ function feed (parent, args, context, info){
     const links = await context.prisma.links({
         where,
         skip: args.skip,
-        first: args.skip
+        first: args.skip,
+        orderBy: args.orderBy
     })
     return links;
 }
