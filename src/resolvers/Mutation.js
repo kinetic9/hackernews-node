@@ -57,10 +57,32 @@ function post (parent,args, context, info){
     });
 };
 
+async function vote(parent, args, context,info){
+
+    //get the user id
+    const userId = getUserId(context);
+
+    //check if the link hasnt been voted for before by the same user
+    const linkExists = await context.prisma.$exists.vote({
+        user: { id: userId}, 
+        link: { id: args.linkId },
+    });
+    if (linkExists){
+        throw new Error(`Already voted for link: ${args.linkId}`)
+    }
+
+    return context.prisma.createVote({
+        user: {connect: {id: userId}},
+        link: {connect: {id: args.linkId}}
+    });
+
+}
+
 // Export the module
 
 module.exports = {
     signup,
     login,
-    post
+    post,
+    vote
 }
