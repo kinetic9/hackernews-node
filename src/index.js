@@ -1,49 +1,52 @@
 // Dependancies
 const { GraphQLServer } = require('graphql-yoga');
 const _ = require('lodash');
+const { prisma } = require('./generated/prisma-client');
 
 
-//dummy data
+// //dummy data
 
-let links =[{
-    id: 'link-0',
-    url: 'www.howtographql',
-    description: 'Fullstack tutorial for GraphQL'
-}, {
-    id: 'link-1',
-    url: 'www.google.com',
-    description: 'Search Engine'
-}
-];
+// let links =[{
+//     id: 'link-0',
+//     url: 'www.howtographql',
+//     description: 'Fullstack tutorial for GraphQL'
+// }, {
+//     id: 'link-1',
+//     url: 'www.google.com',
+//     description: 'Search Engine'
+// }
+// ];
 
-let idCount = links.length;
+// let idCount = links.length;
 
 // GraphQL implementation
+// The context argument is a plain JavaScript object that every resolver in the resolver chain can read from and write to - 
+// it thus basically is a means for resolvers to communicate
+
 const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
-        feed: () => links,
-        link: (parent,args) => _.find(links, {id: args.id})
+        feed: (root,args, context, info) => {
+            return context.prisma.links()
+        },
+       // link: (parent,args) => _.find(links, {id: args.id})
     },
 
     Mutation:{
-        post: (parent, args) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description: args.description,
+        post: (root, args, context, info) => {
+            return context.prisma.createLink({
                 url: args.url,
-            }
-            links.push(link);
-            return link;
+                description: args.description,
+            })
         },
-        updateLink: (parent, args) => {
-            var ind = _.findIndex(links, {id: args.id});
+        // updateLink: (parent, args) => {
+        //     var ind = _.findIndex(links, {id: args.id});
 
-            links[ind].url = args.url !== undefined ? args.url : links[ind].url;
-            links[ind].description = args.description !== undefined ? args.description : links[ind].description;
+        //     links[ind].url = args.url !== undefined ? args.url : links[ind].url;
+        //     links[ind].description = args.description !== undefined ? args.description : links[ind].description;
 
-            return links[ind];
-        },
+        //     return links[ind];
+        // },
         // deleteLink: (parent,args) => {
         //     //var ind = _.findIndex(links, {id: args.id});
         //     //links = (links, {id: args.id});
@@ -63,6 +66,7 @@ const resolvers = {
 const server = new GraphQLServer ({
     typeDefs : './src/schema.graphql',
     resolvers,
+    context: { prisma },
 });
 
 
