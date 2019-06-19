@@ -12,8 +12,22 @@ function feed (parent, args, context, info){
         first: args.skip,
         orderBy: args.orderBy
     })
-    return links;
+
+    const count = await context.prisma
+        .linksConnection({
+            where,
+        })
+        .aggregate()
+        .count()
+
+
+    return{
+        links,
+        count
+    }
 }
+
+
 
 module.exports = {
     feed
