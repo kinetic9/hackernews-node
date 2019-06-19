@@ -3,12 +3,12 @@ function newLinkSubscribe (parent, args, context, info){
 }
 
 const newLink = {
-    subscribe: newLinkSubscribe;
+    subscribe: newLinkSubscribe,
     resolve: payload => {
-        return payload
+        return payload;
     }
 }
 
 module.exports = {
-    newLink
+    newLink,
 }
