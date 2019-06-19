@@ -1,65 +1,23 @@
 // Dependancies
 const { GraphQLServer } = require('graphql-yoga');
-const _ = require('lodash');
 const { prisma } = require('./generated/prisma-client');
+const Query = require('./resolvers/Query');
+const Mutation = require('./resolvers/Mutation');
+const User = require('./resolvers/User');
+const Link = require('./resolvers/Link');
 
-
-// //dummy data
-
-// let links =[{
-//     id: 'link-0',
-//     url: 'www.howtographql',
-//     description: 'Fullstack tutorial for GraphQL'
-// }, {
-//     id: 'link-1',
-//     url: 'www.google.com',
-//     description: 'Search Engine'
-// }
-// ];
-
-// let idCount = links.length;
 
 // GraphQL implementation
 // The context argument is a plain JavaScript object that every resolver in the resolver chain can read from and write to - 
 // it thus basically is a means for resolvers to communicate
 
 const resolvers = {
-    Query: {
-        info: () => `This is the API of a Hackernews Clone`,
-        feed: (root,args, context, info) => {
-            return context.prisma.links()
-        },
-       // link: (parent,args) => _.find(links, {id: args.id})
-    },
 
-    Mutation:{
-        post: (root, args, context, info) => {
-            return context.prisma.createLink({
-                url: args.url,
-                description: args.description,
-            })
-        },
-        // updateLink: (parent, args) => {
-        //     var ind = _.findIndex(links, {id: args.id});
-
-        //     links[ind].url = args.url !== undefined ? args.url : links[ind].url;
-        //     links[ind].description = args.description !== undefined ? args.description : links[ind].description;
-
-        //     return links[ind];
-        // },
-        // deleteLink: (parent,args) => {
-        //     //var ind = _.findIndex(links, {id: args.id});
-        //     //links = (links, {id: args.id});
-        //     _.remove(links, {id: args.id});
-
-        //     if(links.length == 0){
-        //         return null;
-        //     }else{
-        //         return links;
-        //     }
-        // }
-       
-    }
+    Query,
+    Link,
+    User,
+    Mutation    
+    
 }
 
 // bundle schema and resolvers into GraphQL server
