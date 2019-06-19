@@ -1,3 +1,10 @@
+// dependancies
+
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { APP_SECRET, getUserId } = require('../utils');
+
+
 async function signup(parent, args, context, info){
     // use the bcrypt lib to hash the password given, using a salt of 10
     const password = await bcrypt.hash(args.password, 10);
@@ -17,14 +24,14 @@ async function signup(parent, args, context, info){
 
 async function login (parent, args, context, info){
 
-    //
+    //fetch an existing user, find by email
     const user = await context.prisma.user({ email: args.email });
     if (!user){
         throw new Error ('No such user found')
     }
 
 
-    //
+    // compare the user password and the one hashed and stored
     const valid = await bcrypt.compare(args.password, user.password)
     if(!valid){
         throw new Error("Invalid password")
@@ -40,6 +47,15 @@ async function login (parent, args, context, info){
     }
 
 }
+
+function post (parent,args, context, info){
+    const userId = getUserId(context)
+    return context.prisma.createLink({
+        url: args.url,
+        description: args.description,
+        postedBy: {connect: {id: userId} },
+    });
+};
 
 // Export the module
 
