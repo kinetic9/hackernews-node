@@ -10,7 +10,7 @@ const newLink = {
 }
 
 const newVote = {
-    subscribe: newVoteSubscribe;
+    subscribe: newVoteSubscribe,
     resolve: payload => {
         return payload;
     }
